@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Minus, Plus } from "lucide-react";
 import { toast } from "sonner";
 import { Spinner } from "@/components/ui/reui-spinner";
+import { FlipCountdown } from "@/components/ui/flip-clock";
 
 import {
   nftRead,
