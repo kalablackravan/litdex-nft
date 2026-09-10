@@ -683,27 +683,33 @@ export function MintCard() {
                   <p className="font-mono text-[11px] font-bold uppercase tracking-widest text-[var(--mint-text-muted)]">
                     Whitelist mint
                   </p>
-                  <p className="mt-2 font-mono text-[12px] font-bold uppercase tracking-widest text-[var(--mint-text)]">
-                    {!whitelistStatusLoaded
-                      ? "…"
-                      : whitelistActive
-                        ? "Open"
-                        : whitelistCountdown
-                          ? `Starts in ${whitelistCountdown}`
-                          : "Not scheduled"}
-                  </p>
+                  {!whitelistStatusLoaded ? (
+                    <p className="mt-2 font-mono text-[12px] font-bold uppercase tracking-widest text-[var(--mint-text)]">…</p>
+                  ) : whitelistActive ? (
+                    <p className="mt-2 font-mono text-[12px] font-bold uppercase tracking-widest text-[var(--mint-text)]">Open</p>
+                  ) : whitelistStartMs > 0 ? (
+                    <div className="mt-2 flex items-center gap-2">
+                      <span className="font-mono text-[12px] font-bold uppercase tracking-widest text-[var(--mint-text)]">Starts in</span>
+                      <FlipCountdown targetMs={whitelistStartMs} />
+                    </div>
+                  ) : (
+                    <p className="mt-2 font-mono text-[12px] font-bold uppercase tracking-widest text-[var(--mint-text)]">Not scheduled</p>
+                  )}
                 </div>
                 <div className="rounded-2xl border border-[var(--mint-border)] bg-[var(--mint-surface)] p-5 shadow-sm transition-shadow duration-300 hover:shadow-md">
                   <p className="font-mono text-[11px] font-bold uppercase tracking-widest text-[var(--mint-text-muted)]">
                     Public mint
                   </p>
-                  <p className="mt-2 font-mono text-[12px] font-bold uppercase tracking-widest text-[var(--mint-text)]">
-                    {started
-                      ? "Live now"
-                      : countdown
-                        ? `Starts in ${countdown}`
-                        : "Not scheduled"}
-                  </p>
+                  {started ? (
+                    <p className="mt-2 font-mono text-[12px] font-bold uppercase tracking-widest text-[var(--mint-text)]">Live now</p>
+                  ) : countdown ? (
+                    <div className="mt-2 flex items-center gap-2">
+                      <span className="font-mono text-[12px] font-bold uppercase tracking-widest text-[var(--mint-text)]">Starts in</span>
+                      <FlipCountdown targetMs={startsAt} />
+                    </div>
+                  ) : (
+                    <p className="mt-2 font-mono text-[12px] font-bold uppercase tracking-widest text-[var(--mint-text)]">Not scheduled</p>
+                  )}
                 </div>
               </div>
               <button
