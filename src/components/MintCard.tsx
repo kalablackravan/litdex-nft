@@ -604,20 +604,20 @@ export function MintCard() {
                               aria-label={`Decrease ${category} quantity`}
                               disabled={qty <= 0 || busy}
                               onClick={() => setQty(category, qty - 1, vouchers.length)}
-                              className="grid size-6 place-items-center rounded-full text-[var(--mint-text)] transition-all hover:bg-[var(--mint-muted)] hover:text-[var(--mint-primary)] active:scale-90 disabled:opacity-40"
+                              className="grid size-5 place-items-center rounded-full text-[var(--mint-text)] transition-all hover:bg-[var(--mint-muted)] hover:text-[var(--mint-primary)] active:scale-90 disabled:opacity-40"
                             >
-                              <Minus className="size-2.5" />
+                              <Minus className="size-2" />
                             </button>
-                            <span className="min-w-4 text-center font-mono text-[11px] font-bold text-[var(--mint-text)]">
+                            <span className="min-w-3.5 text-center font-mono text-[11px] font-bold text-[var(--mint-text)]">
                               {qty}
                             </span>
                             <button
                               aria-label={`Increase ${category} quantity`}
                               disabled={qty >= vouchers.length || busy}
                               onClick={() => setQty(category, qty + 1, vouchers.length)}
-                              className="grid size-6 place-items-center rounded-full text-[var(--mint-text)] transition-all hover:bg-[var(--mint-muted)] hover:text-[var(--mint-primary)] active:scale-90 disabled:opacity-40"
+                              className="grid size-5 place-items-center rounded-full text-[var(--mint-text)] transition-all hover:bg-[var(--mint-muted)] hover:text-[var(--mint-primary)] active:scale-90 disabled:opacity-40"
                             >
-                              <Plus className="size-2.5" />
+                              <Plus className="size-2" />
                             </button>
                           </div>
                         </div>
