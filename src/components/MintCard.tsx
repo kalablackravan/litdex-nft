@@ -142,10 +142,15 @@ export function MintCard() {
     EPIC: "LitGod",
   };
   const RARITY_ICONS: Record<string, string> = {
-    COMMON: litShardIcon.url,
-    RARE: litCoreIcon.url,
-    EPIC: litGodIcon.url,
+    COMMON: "https://cdn.jsdelivr.net/gh/0xDarkSeidBull/nft@main/files/boardpass/LitShard.png",
+    RARE: "https://cdn.jsdelivr.net/gh/0xDarkSeidBull/nft@main/files/boardpass/LitCore.png",
+    EPIC: "https://cdn.jsdelivr.net/gh/0xDarkSeidBull/nft@main/files/boardpass/LitGod.png",
   };
+  const ICON_FALLBACK =
+    "data:image/svg+xml," +
+    encodeURIComponent(
+      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>`,
+    );
   const rarityLabel = (category: string) =>
     RARITY_DISPLAY[category.toUpperCase()] ?? category;
 
