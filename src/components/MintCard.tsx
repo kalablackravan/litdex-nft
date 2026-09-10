@@ -14,9 +14,6 @@ import {
 } from "@/hooks/useLitdex";
 import { useWallet } from "@/hooks/useWallet";
 import { PASS_CARD_IMAGES } from "@/lib/images";
-import litCoreIcon from "@/assets/rarity-icons/LitCore.png.asset.json";
-import litGodIcon from "@/assets/rarity-icons/LitGod.png.asset.json";
-import litShardIcon from "@/assets/rarity-icons/LitShard.png.asset.json";
 import {
   NFT_ADDRESS,
   discountLabel,
