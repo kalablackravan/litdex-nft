@@ -519,7 +519,7 @@ export function MintCard() {
                               {rarityLabel(category)}
                             </p>
                           </div>
-                          <div className="flex shrink-0 items-center gap-1 rounded-full border border-[var(--mint-border)] bg-[var(--mint-surface)] p-0.5">
+                          <div className="flex shrink-0 items-center gap-0.5 rounded-full border border-[var(--mint-border)] bg-[var(--mint-surface)] p-0.5">
                             <button
                               aria-label={`Decrease ${category} quantity`}
                               disabled={qty <= 0 || busy}
