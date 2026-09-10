@@ -14,9 +14,6 @@ import {
 } from "@/hooks/useLitdex";
 import { useWallet } from "@/hooks/useWallet";
 import { PASS_CARD_IMAGES } from "@/lib/images";
-import litCoreIcon from "@/assets/rarity-icons/LitCore.png.asset.json";
-import litGodIcon from "@/assets/rarity-icons/LitGod.png.asset.json";
-import litShardIcon from "@/assets/rarity-icons/LitShard.png.asset.json";
 import {
   NFT_ADDRESS,
   discountLabel,
@@ -145,10 +142,15 @@ export function MintCard() {
     EPIC: "LitGod",
   };
   const RARITY_ICONS: Record<string, string> = {
-    COMMON: litShardIcon.url,
-    RARE: litCoreIcon.url,
-    EPIC: litGodIcon.url,
+    COMMON: "https://cdn.jsdelivr.net/gh/0xDarkSeidBull/nft@main/files/boardpass/LitShard.png",
+    RARE: "https://cdn.jsdelivr.net/gh/0xDarkSeidBull/nft@main/files/boardpass/LitCore.png",
+    EPIC: "https://cdn.jsdelivr.net/gh/0xDarkSeidBull/nft@main/files/boardpass/LitGod.png",
   };
+  const ICON_FALLBACK =
+    "data:image/svg+xml," +
+    encodeURIComponent(
+      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>`,
+    );
   const rarityLabel = (category: string) =>
     RARITY_DISPLAY[category.toUpperCase()] ?? category;
 
@@ -582,14 +584,18 @@ export function MintCard() {
                         </span>
 
                         <div className="flex min-h-[78px] items-end justify-between gap-2 pl-8 pt-7">
-                          <div className="flex min-w-0 items-center gap-2 self-center">
+                          <div className="flex min-w-0 flex-1 items-center gap-2 self-center">
                             <img
                               src={RARITY_ICONS[category.toUpperCase()]}
                               alt=""
                               aria-hidden="true"
-                              className="size-8 shrink-0 object-contain"
+                              className="size-7 shrink-0 object-contain"
+                              onError={(e) => {
+                                e.currentTarget.onerror = null;
+                                e.currentTarget.src = ICON_FALLBACK;
+                              }}
                             />
-                            <p className="min-w-0 whitespace-nowrap font-mono text-[11px] font-bold tracking-wider text-[var(--mint-text)]">
+                            <p className="break-words font-mono text-[11px] font-bold leading-tight tracking-wider text-[var(--mint-text)]">
                               {rarityLabel(category)}
                             </p>
                           </div>
@@ -598,20 +604,20 @@ export function MintCard() {
                               aria-label={`Decrease ${category} quantity`}
                               disabled={qty <= 0 || busy}
                               onClick={() => setQty(category, qty - 1, vouchers.length)}
-                              className="grid size-6 place-items-center rounded-full text-[var(--mint-text)] transition-all hover:bg-[var(--mint-muted)] hover:text-[var(--mint-primary)] active:scale-90 disabled:opacity-40"
+                              className="grid size-5 place-items-center rounded-full text-[var(--mint-text)] transition-all hover:bg-[var(--mint-muted)] hover:text-[var(--mint-primary)] active:scale-90 disabled:opacity-40"
                             >
-                              <Minus className="size-2.5" />
+                              <Minus className="size-2" />
                             </button>
-                            <span className="min-w-4 text-center font-mono text-[11px] font-bold text-[var(--mint-text)]">
+                            <span className="min-w-3.5 text-center font-mono text-[11px] font-bold text-[var(--mint-text)]">
                               {qty}
                             </span>
                             <button
                               aria-label={`Increase ${category} quantity`}
                               disabled={qty >= vouchers.length || busy}
                               onClick={() => setQty(category, qty + 1, vouchers.length)}
-                              className="grid size-6 place-items-center rounded-full text-[var(--mint-text)] transition-all hover:bg-[var(--mint-muted)] hover:text-[var(--mint-primary)] active:scale-90 disabled:opacity-40"
+                              className="grid size-5 place-items-center rounded-full text-[var(--mint-text)] transition-all hover:bg-[var(--mint-muted)] hover:text-[var(--mint-primary)] active:scale-90 disabled:opacity-40"
                             >
-                              <Plus className="size-2.5" />
+                              <Plus className="size-2" />
                             </button>
                           </div>
                         </div>
