@@ -526,13 +526,22 @@ export function MintCard() {
                             : "bg-[var(--mint-success)]"
                         }`}
                       />
-                      <span className="font-mono text-[11px] font-bold uppercase tracking-widest text-[var(--mint-text)]">
-                        {whitelistActive
-                          ? "Minting now"
-                          : whitelistCountdown
-                            ? `Starts in ${whitelistCountdown}`
-                            : "Not scheduled"}
-                      </span>
+                      {whitelistActive ? (
+                        <span className="font-mono text-[11px] font-bold uppercase tracking-widest text-[var(--mint-text)]">
+                          Minting now
+                        </span>
+                      ) : whitelistStartMs > 0 ? (
+                        <span className="flex items-center gap-2">
+                          <span className="font-mono text-[11px] font-bold uppercase tracking-widest text-[var(--mint-text)]">
+                            Starts in
+                          </span>
+                          <FlipCountdown targetMs={whitelistStartMs} />
+                        </span>
+                      ) : (
+                        <span className="font-mono text-[11px] font-bold uppercase tracking-widest text-[var(--mint-text)]">
+                          Not scheduled
+                        </span>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -726,20 +735,24 @@ export function MintCard() {
                       started ? "bg-[var(--mint-primary)]" : "bg-[var(--mint-success)]"
                     }`}
                   />
-                  <span className="font-mono text-[11px] font-bold uppercase tracking-widest text-[var(--mint-text)]">
-                    {started ? "Minting now" : "Not started"}
-                  </span>
+                  {started ? (
+                    <span className="font-mono text-[11px] font-bold uppercase tracking-widest text-[var(--mint-text)]">
+                      Minting live
+                    </span>
+                  ) : countdown ? (
+                    <span className="flex items-center gap-2">
+                      <span className="font-mono text-[11px] font-bold uppercase tracking-widest text-[var(--mint-text)]">
+                        Starts in
+                      </span>
+                      <FlipCountdown targetMs={startsAt} />
+                    </span>
+                  ) : (
+                    <span className="font-mono text-[11px] font-bold uppercase tracking-widest text-[var(--mint-text)]">
+                      Not scheduled
+                    </span>
+                  )}
                 </div>
               </div>
-
-              {/* Plain text countdown line */}
-              <p className="mt-4 font-mono text-[12px] font-bold uppercase tracking-widest text-[var(--mint-text-muted)]">
-                {started
-                  ? "Minting now"
-                  : countdown
-                    ? `Starts in ${countdown}`
-                    : "Not scheduled"}
-              </p>
 
               {/* Stepper + mint button row, immediately after the countdown */}
               <div className="mt-4 flex flex-wrap items-center justify-between gap-4">
