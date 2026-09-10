@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Minus, Plus } from "lucide-react";
 import { toast } from "sonner";
 import { Spinner } from "@/components/ui/reui-spinner";
+import { FlipCountdown } from "@/components/ui/flip-clock";
 
 import {
   nftRead,
@@ -306,96 +307,6 @@ export function MintCard() {
     }
   }
 
-  const publicStageCard = (
-    <div className="rounded-[2rem] border border-[var(--mint-border)] bg-[var(--mint-surface)] p-5 shadow-sm md:p-6">
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div className="space-y-1">
-          <p className="font-mono text-[11px] font-bold uppercase tracking-widest text-[var(--mint-text-muted)]">
-            Public stage
-          </p>
-          <p className="font-sans text-2xl font-bold text-[var(--mint-text)]">
-            ${price !== null ? formatUsdt(price) : "…"} USDC
-          </p>
-        </div>
-        <div className="flex items-center gap-2 rounded-full border border-[var(--mint-border)] bg-[var(--mint-muted)] px-3 py-1.5">
-          <span
-            className={`size-2 rounded-full ${
-              started ? "bg-[var(--mint-primary)]" : "bg-[var(--mint-success)]"
-            }`}
-          />
-          <span className="font-mono text-[11px] font-bold uppercase tracking-widest text-[var(--mint-text)]">
-            {started ? "Minting now" : "Not started"}
-          </span>
-        </div>
-      </div>
-
-      <div className="mt-5 flex flex-wrap items-center justify-between gap-4">
-
-        <p className="font-mono text-[12px] font-bold uppercase tracking-widest text-[var(--mint-text-muted)]">
-          {started
-            ? "Minting now"
-            : countdown
-              ? `Starts in ${countdown}`
-              : "Not scheduled"}
-        </p>
-      </div>
-
-      <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
-        <div className="flex items-center gap-2 rounded-full border border-[var(--mint-border)] bg-[var(--mint-muted)] p-1">
-          <button
-            aria-label="Decrease public mint quantity"
-            disabled={publicQtyClamped <= 1 || busy}
-            onClick={() => setPublicQty(publicQtyClamped - 1)}
-            className="grid size-8 place-items-center rounded-full text-[var(--mint-text)] transition-all hover:bg-[var(--mint-surface)] hover:text-[var(--mint-primary)] active:scale-90 disabled:opacity-40"
-          >
-            <Minus className="size-3.5" />
-          </button>
-          <span className="min-w-6 text-center font-mono text-sm font-bold text-[var(--mint-text)]">
-            {publicQtyClamped}
-          </span>
-          <button
-            aria-label="Increase public mint quantity"
-            disabled={publicQtyClamped >= remainingPublic || busy}
-            onClick={() => setPublicQty(publicQtyClamped + 1)}
-            className="grid size-8 place-items-center rounded-full text-[var(--mint-text)] transition-all hover:bg-[var(--mint-surface)] hover:text-[var(--mint-primary)] active:scale-90 disabled:opacity-40"
-          >
-            <Plus className="size-3.5" />
-          </button>
-        </div>
-
-        <button
-          disabled={
-            !correctNetwork ||
-            soldOut ||
-            busy ||
-            !mintStatus ||
-            !started ||
-            limitReached
-          }
-          onClick={() => void handleMint(publicQtyClamped)}
-          className="rounded-full bg-gradient-to-r from-blue-600 to-violet-600 px-8 py-3.5 font-mono text-[13px] font-bold uppercase tracking-widest text-white shadow-lg shadow-blue-600/20 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-blue-600/25 active:translate-y-0 active:scale-[0.98] disabled:opacity-40 disabled:hover:transform-none"
-        >
-          {soldOut
-            ? "Sold out"
-            : !started
-              ? "Mint when live"
-              : limitReached
-                ? "Limit reached"
-                : status ??
-                  `Mint ${publicQtyClamped} · ${
-                    price !== null
-                      ? formatUsdt(price * BigInt(publicQtyClamped))
-                      : "…"
-                  } USDC`}
-        </button>
-      </div>
-
-      <p className="mt-5 text-right font-mono text-[11px] font-bold uppercase tracking-widest text-[var(--mint-text-muted)]">
-        Limit {WALLET_LIMIT} per wallet · You own {ownedCount}
-      </p>
-    </div>
-  );
-
   return (
     <div
       id="mint"
@@ -525,13 +436,22 @@ export function MintCard() {
                             : "bg-[var(--mint-success)]"
                         }`}
                       />
-                      <span className="font-mono text-[11px] font-bold uppercase tracking-widest text-[var(--mint-text)]">
-                        {whitelistActive
-                          ? "Minting now"
-                          : whitelistCountdown
-                            ? `Starts in ${whitelistCountdown}`
-                            : "Not scheduled"}
-                      </span>
+                      {whitelistActive ? (
+                        <span className="font-mono text-[11px] font-bold uppercase tracking-widest text-[var(--mint-text)]">
+                          Minting now
+                        </span>
+                      ) : whitelistStartMs > 0 ? (
+                        <span className="flex items-center gap-2">
+                          <span className="font-mono text-[11px] font-bold uppercase tracking-widest text-[var(--mint-text)]">
+                            Starts in
+                          </span>
+                          <FlipCountdown targetMs={whitelistStartMs} />
+                        </span>
+                      ) : (
+                        <span className="font-mono text-[11px] font-bold uppercase tracking-widest text-[var(--mint-text)]">
+                          Not scheduled
+                        </span>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -584,7 +504,7 @@ export function MintCard() {
                         </span>
 
                         <div className="flex min-h-[78px] items-end justify-between gap-2 pl-8 pt-7">
-                          <div className="flex min-w-0 flex-1 items-center gap-2 self-center">
+                          <div className="flex w-[76px] shrink-0 flex-col items-center gap-1 self-center text-center">
                             <img
                               src={RARITY_ICONS[category.toUpperCase()]}
                               alt=""
@@ -595,11 +515,11 @@ export function MintCard() {
                                 e.currentTarget.src = ICON_FALLBACK;
                               }}
                             />
-                            <p className="break-words font-mono text-[11px] font-bold leading-tight tracking-wider text-[var(--mint-text)]">
+                            <p className="w-full break-words font-mono text-[11px] font-bold leading-tight tracking-wider text-[var(--mint-text)]">
                               {rarityLabel(category)}
                             </p>
                           </div>
-                          <div className="flex shrink-0 items-center gap-1 rounded-full border border-[var(--mint-border)] bg-[var(--mint-surface)] p-0.5">
+                          <div className="flex shrink-0 items-center gap-0.5 rounded-full border border-[var(--mint-border)] bg-[var(--mint-surface)] p-0.5">
                             <button
                               aria-label={`Decrease ${category} quantity`}
                               disabled={qty <= 0 || busy}
@@ -673,27 +593,33 @@ export function MintCard() {
                   <p className="font-mono text-[11px] font-bold uppercase tracking-widest text-[var(--mint-text-muted)]">
                     Whitelist mint
                   </p>
-                  <p className="mt-2 font-mono text-[12px] font-bold uppercase tracking-widest text-[var(--mint-text)]">
-                    {!whitelistStatusLoaded
-                      ? "…"
-                      : whitelistActive
-                        ? "Open"
-                        : whitelistCountdown
-                          ? `Starts in ${whitelistCountdown}`
-                          : "Not scheduled"}
-                  </p>
+                  {!whitelistStatusLoaded ? (
+                    <p className="mt-2 font-mono text-[12px] font-bold uppercase tracking-widest text-[var(--mint-text)]">…</p>
+                  ) : whitelistActive ? (
+                    <p className="mt-2 font-mono text-[12px] font-bold uppercase tracking-widest text-[var(--mint-text)]">Open</p>
+                  ) : whitelistStartMs > 0 ? (
+                    <div className="mt-2 flex items-center gap-2">
+                      <span className="font-mono text-[12px] font-bold uppercase tracking-widest text-[var(--mint-text)]">Starts in</span>
+                      <FlipCountdown targetMs={whitelistStartMs} />
+                    </div>
+                  ) : (
+                    <p className="mt-2 font-mono text-[12px] font-bold uppercase tracking-widest text-[var(--mint-text)]">Not scheduled</p>
+                  )}
                 </div>
                 <div className="rounded-2xl border border-[var(--mint-border)] bg-[var(--mint-surface)] p-5 shadow-sm transition-shadow duration-300 hover:shadow-md">
                   <p className="font-mono text-[11px] font-bold uppercase tracking-widest text-[var(--mint-text-muted)]">
                     Public mint
                   </p>
-                  <p className="mt-2 font-mono text-[12px] font-bold uppercase tracking-widest text-[var(--mint-text)]">
-                    {started
-                      ? "Live now"
-                      : countdown
-                        ? `Starts in ${countdown}`
-                        : "Not scheduled"}
-                  </p>
+                  {started ? (
+                    <p className="mt-2 font-mono text-[12px] font-bold uppercase tracking-widest text-[var(--mint-text)]">Live now</p>
+                  ) : countdown ? (
+                    <div className="mt-2 flex items-center gap-2">
+                      <span className="font-mono text-[12px] font-bold uppercase tracking-widest text-[var(--mint-text)]">Starts in</span>
+                      <FlipCountdown targetMs={startsAt} />
+                    </div>
+                  ) : (
+                    <p className="mt-2 font-mono text-[12px] font-bold uppercase tracking-widest text-[var(--mint-text)]">Not scheduled</p>
+                  )}
                 </div>
               </div>
               <button
@@ -725,20 +651,24 @@ export function MintCard() {
                       started ? "bg-[var(--mint-primary)]" : "bg-[var(--mint-success)]"
                     }`}
                   />
-                  <span className="font-mono text-[11px] font-bold uppercase tracking-widest text-[var(--mint-text)]">
-                    {started ? "Minting now" : "Not started"}
-                  </span>
+                  {started ? (
+                    <span className="font-mono text-[11px] font-bold uppercase tracking-widest text-[var(--mint-text)]">
+                      Minting live
+                    </span>
+                  ) : countdown ? (
+                    <span className="flex items-center gap-2">
+                      <span className="font-mono text-[11px] font-bold uppercase tracking-widest text-[var(--mint-text)]">
+                        Starts in
+                      </span>
+                      <FlipCountdown targetMs={startsAt} />
+                    </span>
+                  ) : (
+                    <span className="font-mono text-[11px] font-bold uppercase tracking-widest text-[var(--mint-text)]">
+                      Not scheduled
+                    </span>
+                  )}
                 </div>
               </div>
-
-              {/* Plain text countdown line */}
-              <p className="mt-4 font-mono text-[12px] font-bold uppercase tracking-widest text-[var(--mint-text-muted)]">
-                {started
-                  ? "Minting now"
-                  : countdown
-                    ? `Starts in ${countdown}`
-                    : "Not scheduled"}
-              </p>
 
               {/* Stepper + mint button row, immediately after the countdown */}
               <div className="mt-4 flex flex-wrap items-center justify-between gap-4">
