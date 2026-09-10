@@ -584,14 +584,18 @@ export function MintCard() {
                         </span>
 
                         <div className="flex min-h-[78px] items-end justify-between gap-2 pl-8 pt-7">
-                          <div className="flex min-w-0 items-center gap-2 self-center">
+                          <div className="flex min-w-0 flex-1 items-center gap-2 self-center">
                             <img
                               src={RARITY_ICONS[category.toUpperCase()]}
                               alt=""
                               aria-hidden="true"
-                              className="size-8 shrink-0 object-contain"
+                              className="size-7 shrink-0 object-contain"
+                              onError={(e) => {
+                                e.currentTarget.onerror = null;
+                                e.currentTarget.src = ICON_FALLBACK;
+                              }}
                             />
-                            <p className="min-w-0 whitespace-nowrap font-mono text-[11px] font-bold tracking-wider text-[var(--mint-text)]">
+                            <p className="break-words font-mono text-[11px] font-bold leading-tight tracking-wider text-[var(--mint-text)]">
                               {rarityLabel(category)}
                             </p>
                           </div>
