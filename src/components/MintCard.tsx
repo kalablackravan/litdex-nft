@@ -503,8 +503,8 @@ export function MintCard() {
                           x {vouchers.length}
                         </span>
 
-                        <div className="flex min-h-[78px] items-end justify-between gap-2 pl-8 pt-7">
-                          <div className="flex w-[76px] shrink-0 flex-col items-center gap-1 self-center text-center">
+                        <div className="flex min-h-[78px] items-end justify-between gap-2 pl-5 pt-7">
+                          <div className="flex w-[68px] shrink-0 flex-col items-center gap-1 self-center text-center">
                             <img
                               src={RARITY_ICONS[category.toUpperCase()]}
                               alt=""
