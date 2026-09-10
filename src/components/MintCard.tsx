@@ -585,7 +585,7 @@ export function MintCard() {
                         </span>
 
                         <div className="flex min-h-[78px] items-end justify-between gap-2 pl-8 pt-7">
-                          <div className="flex min-w-0 flex-1 items-center gap-2 self-center">
+                          <div className="flex w-[80px] shrink-0 flex-col items-center gap-1 self-center text-center">
                             <img
                               src={RARITY_ICONS[category.toUpperCase()]}
                               alt=""
@@ -596,7 +596,7 @@ export function MintCard() {
                                 e.currentTarget.src = ICON_FALLBACK;
                               }}
                             />
-                            <p className="break-words font-mono text-[11px] font-bold leading-tight tracking-wider text-[var(--mint-text)]">
+                            <p className="w-full break-words font-mono text-[11px] font-bold leading-tight tracking-wider text-[var(--mint-text)]">
                               {rarityLabel(category)}
                             </p>
                           </div>
